@@ -143,9 +143,9 @@ export async function POST(req: NextRequest) {
           "Dạ em chào anh/chị! Em là **STOW** - trợ lý cá nhân của **MyStorage**.\n\n" +
           "MyStorage được thành lập từ năm 2019 theo tiêu chuẩn Mỹ và Đức, là thành viên chính thức của Hiệp hội Tự lưu trữ Châu Á (SSAA) với hơn 650+ đánh giá 5 sao trên Google.\n\n" +
           "Hệ thống kho tự quản máy lạnh hiện đại tại TP.HCM gồm các chi nhánh:\n" +
-          "📍 **Trụ sở chính:** 375 Võ Nguyên Giáp, P. An Khánh, TP. Thủ Đức\n" +
-          "📍 **Kho An Phú:** 90 Song Hành, TP. Thủ Đức\n" +
-          "📍 **Locker 24/7:** Ministop 79 Trần Khắc Chân (Q1) & Centre Mall (Q6)\n\n" +
+          "- Trụ sở chính: 375 Võ Nguyên Giáp, P. An Khánh, TP. Thủ Đức\n" +
+          "- Kho An Phú: 90 Song Hành, TP. Thủ Đức\n" +
+          "- Locker 24/7: Ministop 79 Trần Khắc Chân (Q1) & Centre Mall (Q6)\n\n" +
           "Anh/chị có thể tham khảo bảng kích thước kho phổ biến bên dưới hoặc cho em biết nhu cầu nhé!";
         cardData = {
           type: "storage_units",
@@ -168,7 +168,7 @@ export async function POST(req: NextRequest) {
           "• **Kho 2 CBM (Tủ đôi):** Từ **950.000 VNĐ / tháng**\n" +
           "• **Kho 3 CBM (Studio):** Từ **1.250.000 VNĐ / tháng**\n" +
           "• **Kho 6–10 CBM (Gia đình):** Từ **2.190.000 VNĐ / tháng**\n\n" +
-          "💡 **Ưu đãi hiện có:** Thuê từ 3 tháng giảm 5%, từ 6 tháng giảm 10%, từ 12 tháng giảm 15%!\n" +
+          "• **Ưu đãi hiện có:** Thuê từ 3 tháng giảm 5%, từ 6 tháng giảm 10%, từ 12 tháng giảm 15%!\n" +
           "Anh/chị có thể bấm chọn kích thước phù hợp bên dưới để giữ chỗ ngay:";
         cardData = {
           type: "storage_units",
