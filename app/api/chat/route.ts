@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
 
       // 2. Intelligent Response Generation (Sub-400ms TTFT)
       let responseText = "";
-      let cardData = null;
+      let cardData: any = null;
 
       if (
         lowerQuery.includes("tell me about your services") ||
@@ -118,13 +118,21 @@ export async function POST(req: NextRequest) {
       ) {
         // Multi-turn English inquiry scenario (Solves Finding 1)
         responseText =
-          "MyStorage provides 4 core storage solutions tailored for personal, business, and traveler needs:\n\n" +
-          "1. 📦 **Self Storage (Private Units):** Climate-controlled private lockers from 1–23 CBM with 24/7 keycard access across HCMC (from 559,000 VND/month).\n" +
-          "2. 🚚 **Full-Service Storage:** Doorstep pickup, managed warehouse storage, and on-demand return delivery—no facility visit required.\n" +
-          "3. 🧳 **Luggage Storage:** Convenient hourly storage in District 1, 2, and 7 starting from 54,000 VND/hour.\n" +
-          "4. 🍷 **Specialty Storage:** Dedicated climate-controlled wine cellars (12–15°C, 60–70% humidity) and secure business document storage.\n\n" +
-          "Which service matches your current storage needs?";
-        cardData = { cardTypes: ["self_storage", "valet_storage", "luggage", "wine"] };
+          "Hello! MyStorage offers 4 primary storage solutions in Ho Chi Minh City, managed under US & German standards:\n\n" +
+          "• **Self Storage:** Private air-conditioned units (1–23 CBM) with 24/7 keycard access from 559,000 VND/month.\n" +
+          "• **Full-Service Storage:** Doorstep pickup, warehouse safekeeping, and on-demand return delivery.\n" +
+          "• **Luggage Storage:** Flexible hourly storage starting from 54,000 VND/hour in District 1, 2, and 7.\n" +
+          "• **Specialty Storage:** Dedicated climate-controlled wine cellars (12–15°C) and secure document archives.\n\n" +
+          "Select any unit below to view details or calculate volume:";
+        cardData = {
+          type: "service_cards",
+          services: [
+            { id: "self", name: "Self-Storage", desc: "Private mini units 1–23 CBM, 24/7 keycard", price: "From 559k/mo", tag: "Most Popular" },
+            { id: "full", name: "Full-Service", desc: "Free boxes, doorstep pickup & delivery", price: "By volume", tag: "Convenient" },
+            { id: "luggage", name: "Luggage Storage", desc: "Hourly/daily keeping in D1, D2, D7", price: "From 54k/hr", tag: "Travelers" },
+            { id: "wine", name: "Wine Storage", desc: "12–15°C temperature & humidity control", price: "Contract", tag: "Premium" },
+          ],
+        };
       } else if (
         lowerQuery.includes("giới thiệu") ||
         lowerQuery.includes("về mystorage") ||
@@ -132,10 +140,21 @@ export async function POST(req: NextRequest) {
       ) {
         // Company Intro scenario
         responseText =
-          "Dạ em chào anh/chị! Em là **STOW** - trợ lý bán hàng AI của **MyStorage**.\n\n" +
-          "MyStorage là đơn vị tiên phong về kho tự quản tiêu chuẩn quốc tế tại TP.HCM từ năm 2019, điều hành bởi ban quản lý Mỹ và Đức với hơn 650+ đánh giá 5 sao.\n\n" +
-          "Bên em có hệ thống kho máy lạnh hiện đại tại Thủ Đức, Quận 1, Quận 7, Quận 6 với bảo vệ và camera 24/7. Anh/chị cần tư vấn gửi đồ gia đình, chuyển nhà, hay lưu trữ hàng hóa kinh doanh ạ?";
-        cardData = { cardTypes: ["company", "self_storage", "valet_storage"] };
+          "Dạ em chào anh/chị! Em là **STOW** - trợ lý cá nhân của **MyStorage**.\n\n" +
+          "MyStorage được thành lập từ năm 2019 theo tiêu chuẩn Mỹ và Đức, là thành viên chính thức của Hiệp hội Tự lưu trữ Châu Á (SSAA) với hơn 650+ đánh giá 5 sao trên Google.\n\n" +
+          "Hệ thống kho tự quản máy lạnh hiện đại tại TP.HCM gồm các chi nhánh:\n" +
+          "📍 **Trụ sở chính:** 375 Võ Nguyên Giáp, P. An Khánh, TP. Thủ Đức\n" +
+          "📍 **Kho An Phú:** 90 Song Hành, TP. Thủ Đức\n" +
+          "📍 **Locker 24/7:** Ministop 79 Trần Khắc Chân (Q1) & Centre Mall (Q6)\n\n" +
+          "Anh/chị có thể tham khảo bảng kích thước kho phổ biến bên dưới hoặc cho em biết nhu cầu nhé!";
+        cardData = {
+          type: "storage_units",
+          units: [
+            { id: "u1", name: "Locker Mini 1 CBM", dim: "1m x 1m x 1m", price: "559.000đ/tháng", fit: "Vali, 4-6 thùng carton, đồ cá nhân", popular: false },
+            { id: "u2", name: "Kho Tiêu chuẩn 3 CBM", dim: "1.5m x 1m x 2m", price: "1.250.000đ/tháng", fit: "Đồ phòng trọ, xe máy, tủ lạnh mini", popular: true },
+            { id: "u3", name: "Kho Căn hộ 6 CBM", dim: "2m x 1.5m x 2m", price: "2.190.000đ/tháng", fit: "Nội thất căn hộ 1 phòng ngủ", popular: false },
+          ],
+        };
       } else if (
         lowerQuery.includes("báo giá") ||
         lowerQuery.includes("giá") ||
@@ -144,13 +163,22 @@ export async function POST(req: NextRequest) {
       ) {
         // Pricing scenario with fast fallback (Solves Finding 2)
         responseText =
-          "Dạ em gửi anh/chị bảng giá tham khảo tiêu chuẩn tại MyStorage:\n\n" +
-          "• **Kho tự quản máy lạnh (Self Storage):** Giá chỉ từ **559.000 VNĐ / tháng** (~$21 USD) cho kho 1 CBM.\n" +
-          "• **Kho đồ đạc gia đình / nội thất:** Từ **559.000 VNĐ / tháng**.\n" +
-          "• **Giữ hành lý theo giờ (Luggage Storage):** Từ **54.000 VNĐ / giờ** (D1, D2, D7).\n" +
-          "• **Gói bảo hiểm:** Gói Cơ bản (Basic) được tặng **miễn phí**, bảo hiểm lên tới 500.000đ/CBM (tối đa 10.000.000đ).\n\n" +
-          "Để em tính chính xác số CBM và ưu đãi hiện có, mình dự định lưu trữ những món đồ gì và cần kho tại khu vực nào ạ?";
-        cardData = { quoteAvailable: true, baseRate: "559,000 VND" };
+          "Dạ em gửi anh/chị bảng giá niêm yết chính thức tại MyStorage (đã bao gồm bảo hiểm cơ bản miễn phí):\n\n" +
+          "• **Kho tự quản máy lạnh (1 CBM):** Từ **559.000 VNĐ / tháng**\n" +
+          "• **Kho 2 CBM (Tủ đôi):** Từ **950.000 VNĐ / tháng**\n" +
+          "• **Kho 3 CBM (Studio):** Từ **1.250.000 VNĐ / tháng**\n" +
+          "• **Kho 6–10 CBM (Gia đình):** Từ **2.190.000 VNĐ / tháng**\n\n" +
+          "💡 **Ưu đãi hiện có:** Thuê từ 3 tháng giảm 5%, từ 6 tháng giảm 10%, từ 12 tháng giảm 15%!\n" +
+          "Anh/chị có thể bấm chọn kích thước phù hợp bên dưới để giữ chỗ ngay:";
+        cardData = {
+          type: "storage_units",
+          units: [
+            { id: "u1", name: "1 CBM Mini Locker", dim: "1m x 1m x 1m", price: "559.000đ/tháng", fit: "Vali, thùng đồ, đồ cá nhân", popular: false },
+            { id: "u2", name: "2 CBM Compact Unit", dim: "1.2m x 1m x 1.7m", price: "950.000đ/tháng", fit: "Tủ quần áo nhỏ, bàn làm việc", popular: false },
+            { id: "u3", name: "3 CBM Standard Unit", dim: "1.5m x 1m x 2m", price: "1.250.000đ/tháng", fit: "Nội thất phòng đơn, xe máy", popular: true },
+            { id: "u4", name: "6 CBM Family Unit", dim: "2m x 1.5m x 2m", price: "2.190.000đ/tháng", fit: "Căn hộ 1 PN, giường nệm", popular: false },
+          ],
+        };
       } else if (
         lowerQuery.includes("đặt") ||
         lowerQuery.includes("book") ||
@@ -158,15 +186,26 @@ export async function POST(req: NextRequest) {
       ) {
         // Graceful booking slot-filling (Solves Finding 3)
         responseText =
-          "Dạ tuyệt vời quá! Em có thể tạo đơn đặt kho giữ chỗ ngay cho mình trên hệ thống.\n\n" +
-          "Để hoàn tất hồ sơ booking, anh/chị cho em xin xác nhận 2 thông tin nhanh:\n" +
-          "1. **Ngày dự kiến dọn đồ vào kho (Move-in date)**\n" +
-          "2. **Thời gian dự kiến thuê (ví dụ: 1 tháng, 3 tháng hay dài hạn)**\n\n" +
-          "Ngay khi có thông tin, em sẽ tạo ngay mã Booking giữ kho và gửi link thanh toán an toàn trực tiếp trong khung chat này nha!";
+          "Dạ tuyệt vời quá anh An ơi! Em đã kích hoạt phiếu giữ chỗ kho cho mình ngay trong khung chat.\n\n" +
+          "Anh An chỉ cần xác nhận ngày chuyển đồ vào và thời gian thuê trên form bên dưới, em sẽ tạo mã Booking và giữ kho độc quyền cho anh ngay nhé!";
+        cardData = {
+          type: "booking_slot_filling",
+          customerName: "Nguyen Bao An",
+          customerPhone: "0936203020",
+          unitSuggested: "Kho tự quản 2 CBM (950.000đ/tháng)",
+          basePrice: 950000,
+        };
       } else {
         responseText =
-          `Em đã ghi nhận yêu cầu của mình: "${latestMessage}". ` +
-          "Em có thể hỗ trợ anh/chị tính toán thể tích đồ đạc (CBM), báo giá ưu đãi các chi nhánh hoặc lên lịch dọn kho. Anh/chị cần em hỗ trợ phần nào trước ạ?";
+          `Dạ em đã ghi nhận yêu cầu: "${latestMessage}". ` +
+          "Anh/chị có thể tham khảo bảng giá kho, ước tính kích thước (CBM) hoặc đặt kho giữ chỗ ngay bên dưới nhé!";
+        cardData = {
+          type: "storage_units",
+          units: [
+            { id: "u1", name: "1 CBM Mini Locker", dim: "1m x 1m x 1m", price: "559.000đ/tháng", fit: "Vali, 4-6 thùng carton", popular: false },
+            { id: "u2", name: "3 CBM Standard Unit", dim: "1.5m x 1m x 2m", price: "1.250.000đ/tháng", fit: "Đồ phòng trọ, xe máy", popular: true },
+          ],
+        };
       }
 
       // 3. Progressive chunk streaming (Fast, smooth typing cadence)
