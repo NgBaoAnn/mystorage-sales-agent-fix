@@ -416,7 +416,7 @@ export default function Home() {
                           <button
                             onClick={() => handleSelectUnit(unit)}
                             disabled={isStreaming}
-                            className="w-full py-2 bg-slate-900 hover:bg-[#0275BC] text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]"
+                            className="w-full py-2.5 bg-[#0275BC] hover:bg-[#015386] text-white text-xs font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-150 active:scale-[0.98]"
                           >
                             Chọn kích thước này
                           </button>
