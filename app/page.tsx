@@ -39,22 +39,22 @@ function FormattedContent({ text, isUser }: { text: string; isUser: boolean }) {
   const lines = text.split("\n");
 
   return (
-    <div className="space-y-1.5 leading-relaxed text-sm">
+    <div className="space-y-2 leading-relaxed text-[14px]">
       {lines.map((line, lIdx) => {
         if (!line.trim()) {
-          return <div key={lIdx} className="h-2" />;
+          return <div key={lIdx} className="h-1.5" />;
         }
         const parts = line.split(/(\*\*[^*]+\*\*)/g);
         const isBullet = line.trim().startsWith("• ") || line.trim().startsWith("- ");
 
         return (
-          <p key={lIdx} className={isBullet ? "pl-3" : ""}>
+          <p key={lIdx} className={isBullet ? "pl-3.5 text-slate-700" : ""}>
             {parts.map((part, pIdx) => {
               if (part.startsWith("**") && part.endsWith("**")) {
                 return (
                   <strong
                     key={pIdx}
-                    className={`font-bold ${isUser ? "text-white" : "text-slate-900"}`}
+                    className={`font-semibold ${isUser ? "text-white font-bold" : "text-slate-900 font-bold"}`}
                   >
                     {part.slice(2, -2)}
                   </strong>
@@ -75,7 +75,7 @@ export default function Home() {
       id: "welcome",
       role: "assistant",
       content:
-        "Xin chào anh An! Em là **STOW** (Phiên bản Resilient Gateway Prototype của MyStorage).\n\nEm được trang bị bộ lọc **Payload Sanitizer** (chống lỗi nghẽn ngữ cảnh khi chuyển đổi ngôn ngữ) và **SSE Heartbeat Keep-Alive** (phản hồi bảng giá tức thì dưới 300ms, không bị treo 45s).\n\nAnh An cần tham khảo bảng giá kho máy lạnh, ước tính thể tích (CBM) hay muốn đặt kho giữ chỗ ngay ạ?",
+        "Xin chào anh An! Em là **STOW** - Trợ lý thông minh tại **MyStorage**.\n\nPhiên bản này được tích hợp **Resilient Gateway** giúp xử lý triệt để 2 lỗi hệ thống: **Payload Sanitizer** (chống nghẽn context khi chuyển đổi ngôn ngữ) và **SSE Heartbeat** (phản hồi bảng giá tức thì dưới 300ms, không bị treo 45s).\n\nAnh An có thể bấm các kịch bản mẫu phía trên hoặc hỏi em bất kỳ câu hỏi nào về dịch vụ và bảng giá kho nhé!",
       cards: {
         type: "storage_units",
         units: [
@@ -83,24 +83,24 @@ export default function Home() {
             id: "u1",
             name: "Locker Mini 1 CBM",
             dim: "1.0m x 1.0m x 1.0m",
-            price: "559.000đ/tháng",
-            fit: "Vali du lịch, 4–6 thùng đồ cá nhân",
+            price: "559.000đ",
+            fit: "Phù hợp cho vali du lịch, 4–6 thùng carton cá nhân.",
             popular: false,
           },
           {
             id: "u2",
             name: "Kho Tiêu chuẩn 3 CBM",
             dim: "1.5m x 1.0m x 2.0m",
-            price: "1.250.000đ/tháng",
-            fit: "Đồ phòng trọ, xe máy, tủ lạnh mini",
+            price: "1.250.000đ",
+            fit: "Phù hợp đồ phòng trọ, xe máy, tủ lạnh mini, đồ điện tử.",
             popular: true,
           },
           {
             id: "u3",
             name: "Kho Căn hộ 6 CBM",
             dim: "2.0m x 1.5m x 2.0m",
-            price: "2.190.000đ/tháng",
-            fit: "Nội thất căn hộ 1 phòng ngủ, bàn ghế",
+            price: "2.190.000đ",
+            fit: "Nội thất căn hộ 1 phòng ngủ, giường nệm, bàn ghế lớn.",
             popular: false,
           },
         ],
@@ -208,7 +208,7 @@ export default function Home() {
                 );
               }
             } catch {
-              // Ignore partial JSON
+              // Ignore partial chunks
             }
           }
         }
@@ -236,7 +236,7 @@ export default function Home() {
   };
 
   const handleSelectUnit = (unit: StorageUnit) => {
-    sendQuery(`Tôi muốn chọn ${unit.name} (${unit.dim}) với giá ${unit.price}, hỗ trợ tôi đặt kho.`);
+    sendQuery(`Tôi muốn chọn ${unit.name} (${unit.dim}) với giá ${unit.price}/tháng, hỗ trợ tôi đặt kho.`);
   };
 
   const handleConfirmBooking = () => {
@@ -246,168 +246,177 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-800 flex flex-col items-center">
-      {/* Top Header */}
-      <header className="w-full border-b border-slate-200 bg-white sticky top-0 z-20 px-4 py-3">
-        <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3">
+    <main className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col items-center selection:bg-blue-100 selection:text-blue-900">
+      {/* Modern Frosted Header */}
+      <header className="w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-30 px-6 py-3.5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-4">
+          {/* Logo & Subtitle */}
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-bold text-lg text-slate-900 tracking-tight">
+            <div className="flex items-center gap-2.5">
+              <span className="font-extrabold text-lg text-slate-900 tracking-tight">
                 MyStorage STOW
-              </h1>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-[#0275BC] border border-blue-200">
+              </span>
+              <span className="text-[11px] font-semibold tracking-wide uppercase px-2.5 py-0.5 rounded-full bg-blue-50 text-[#0275BC] ring-1 ring-blue-500/20">
                 Resilient Gateway
               </span>
             </div>
-            <p className="text-xs text-slate-500">
-              Bản sửa lỗi cho stow.mystorage.vn | Product Engineering Intern Challenge
+            <p className="text-xs text-slate-400 mt-0.5 font-normal">
+              Nguyễn Bảo An | Product Engineering Intern Assignment
             </p>
           </div>
 
-          {/* Technical Diagnostics */}
-          <div className="flex items-center gap-4 text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5">
-            <div className="flex items-center gap-1">
-              <span className="text-slate-500">Độ trễ TTFT:</span>
-              <strong className="text-slate-900">
+          {/* Minimalist Diagnostics Pill HUD */}
+          <div className="flex items-center gap-3 bg-slate-100/70 p-1.5 rounded-full border border-slate-200/60 text-xs text-slate-600 px-3.5 shadow-inner">
+            <div className="flex items-center gap-1.5">
+              <span className="text-slate-400">TTFT:</span>
+              <span className="font-bold text-slate-900">
                 {latency ? `${latency}ms` : "< 300ms"}
-              </strong>
+              </span>
             </div>
 
-            <div className="h-3 w-px bg-slate-300" />
+            <span className="text-slate-300">•</span>
 
-            <div className="flex items-center gap-1">
-              <span className="text-slate-500">SSE Heartbeats:</span>
-              <strong className="text-[#0275BC]">{heartbeats}</strong>
+            <div className="flex items-center gap-1.5">
+              <span className="text-slate-400">Heartbeats:</span>
+              <span className="font-bold text-[#0275BC]">{heartbeats}</span>
             </div>
 
-            <div className="h-3 w-px bg-slate-300" />
+            <span className="text-slate-300">•</span>
 
-            <div className="flex items-center gap-1">
-              <span className="text-slate-500">Lọc Payload:</span>
-              <strong className="text-emerald-700">Hoạt động</strong>
+            <div className="flex items-center gap-1.5">
+              <span className="text-slate-400">Sanitizer:</span>
+              <span className="font-bold text-emerald-700">Hoạt động</span>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="w-full max-w-4xl flex-1 flex flex-col py-4 px-3 sm:px-4">
-        {/* Verification Scenarios */}
-        <div className="mb-3 bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+      {/* Main Container */}
+      <div className="w-full max-w-4xl flex-1 flex flex-col py-6 px-4 sm:px-6">
+        {/* Verification Scenarios: Modern Minimalist Cards */}
+        <div className="mb-5 bg-white rounded-2xl p-4 border border-slate-200/70 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.04)]">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <span className="text-xs font-bold text-slate-700 tracking-wider uppercase">
               Kịch bản kiểm tra lỗi tìm được
             </span>
             <span className="text-xs text-slate-400">
-              Nhấn để kiểm tra các lỗi đã được sửa
+              Bấm để kích hoạt kịch bản
             </span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             <button
               onClick={handleTestFinding1}
               disabled={isStreaming}
-              className="p-2.5 rounded-lg bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-left transition disabled:opacity-50"
+              className="p-3 rounded-xl bg-slate-50/70 hover:bg-blue-50/50 border border-slate-200/70 hover:border-blue-300 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm disabled:opacity-50 group"
             >
-              <div className="text-xs font-bold text-slate-900">
+              <div className="text-xs font-bold text-slate-900 group-hover:text-[#0275BC] transition-colors">
                 Fix 1: Chuyển ngữ (Vi - En)
               </div>
-              <div className="text-[11px] text-slate-500 mt-0.5">
-                Lọc sạch dữ liệu UI cũ, không đơ
+              <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+                Lọc sạch dữ liệu UI cũ, không đơ 45s
               </div>
             </button>
 
             <button
               onClick={handleTestFinding2}
               disabled={isStreaming}
-              className="p-2.5 rounded-lg bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-left transition disabled:opacity-50"
+              className="p-3 rounded-xl bg-slate-50/70 hover:bg-blue-50/50 border border-slate-200/70 hover:border-blue-300 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm disabled:opacity-50 group"
             >
-              <div className="text-xs font-bold text-slate-900">
+              <div className="text-xs font-bold text-slate-900 group-hover:text-[#0275BC] transition-colors">
                 Fix 2: Nút Báo giá tức thì
               </div>
-              <div className="text-[11px] text-slate-500 mt-0.5">
-                Keep-alive socket, không treo 45s
+              <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+                SSE keep-alive, phản hồi dưới 300ms
               </div>
             </button>
 
             <button
               onClick={handleTestFinding3}
               disabled={isStreaming}
-              className="p-2.5 rounded-lg bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 text-left transition disabled:opacity-50"
+              className="p-3 rounded-xl bg-slate-50/70 hover:bg-blue-50/50 border border-slate-200/70 hover:border-blue-300 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm disabled:opacity-50 group"
             >
-              <div className="text-xs font-bold text-slate-900">
+              <div className="text-xs font-bold text-slate-900 group-hover:text-[#0275BC] transition-colors">
                 Fix 3: Quy trình Đặt luôn
               </div>
-              <div className="text-[11px] text-slate-500 mt-0.5">
-                Bổ sung ngày thuê, không văng lỗi
+              <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+                In-chat slot-filling, không văng form
               </div>
             </button>
           </div>
         </div>
 
         {/* Chat Feed */}
-        <div className="flex-1 bg-white border border-slate-200 rounded-xl shadow-sm flex flex-col overflow-hidden min-h-[460px] max-h-[640px]">
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden min-h-[500px] max-h-[640px]">
+          <div className="flex-1 overflow-y-auto p-5 space-y-5">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
-                <div className="max-w-[90%] sm:max-w-[85%] space-y-3">
-                  {/* Sender Label */}
-                  <div className="text-[11px] font-semibold text-slate-400">
-                    {msg.role === "user" ? "Bạn" : "STOW Trợ lý MyStorage"}
+                <div className="max-w-[88%] sm:max-w-[82%] space-y-3">
+                  {/* Sender Name */}
+                  <div className="text-[11px] font-medium tracking-wide text-slate-400 px-1">
+                    {msg.role === "user" ? "Bạn (Khách hàng)" : "STOW AI Assistant"}
                   </div>
 
                   {/* Message Bubble */}
                   <div
-                    className={`rounded-xl px-4 py-3 text-sm leading-relaxed ${
+                    className={`rounded-2xl px-5 py-3.5 shadow-sm ${
                       msg.role === "user"
-                        ? "bg-[#0275BC] text-white"
-                        : "bg-slate-100 border border-slate-200 text-slate-800"
+                        ? "bg-[#0275BC] text-white rounded-tr-sm"
+                        : "bg-slate-50/90 border border-slate-200/80 text-slate-800 rounded-tl-sm"
                     }`}
                   >
                     {msg.content ? (
                       <FormattedContent text={msg.content} isUser={msg.role === "user"} />
                     ) : (
-                      <span className="text-slate-400">Đang xử lý phản hồi...</span>
+                      <span className="text-slate-400 italic text-xs">
+                        Đang truyền dữ liệu qua Resilient Gateway...
+                      </span>
                     )}
                   </div>
 
-                  {/* Storage Unit Cards */}
+                  {/* Interactive Storage Units Cards */}
                   {msg.cards?.type === "storage_units" && msg.cards.units && (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
                       {msg.cards.units.map((unit) => (
                         <div
                           key={unit.id}
-                          className={`p-3 rounded-xl border flex flex-col justify-between ${
+                          className={`p-4 rounded-2xl border transition-all duration-200 hover:shadow-md flex flex-col justify-between ${
                             unit.popular
-                              ? "bg-blue-50/50 border-[#0275BC]"
-                              : "bg-white border-slate-200"
+                              ? "bg-gradient-to-b from-blue-50/40 to-white border-blue-300 shadow-sm"
+                              : "bg-white border-slate-200/80"
                           }`}
                         >
                           <div>
                             {unit.popular && (
-                              <span className="inline-block text-[10px] font-bold uppercase tracking-wider bg-[#0275BC] text-white px-2 py-0.5 rounded mb-1.5">
+                              <span className="inline-block text-[10px] font-bold uppercase tracking-wider bg-[#0275BC] text-white px-2 py-0.5 rounded-full mb-2">
                                 Khuyên dùng
                               </span>
                             )}
-                            <h4 className="text-xs font-bold text-slate-900 mb-0.5">
+                            <h4 className="text-xs font-bold text-slate-900">
                               {unit.name}
                             </h4>
-                            <div className="text-xs text-[#0275BC] font-bold mb-1">
-                              {unit.price}
+                            <div className="mt-1 mb-2 flex items-baseline gap-1">
+                              <span className="text-base font-extrabold text-[#0275BC]">
+                                {unit.price}
+                              </span>
+                              <span className="text-xs text-slate-400 font-normal">
+                                /tháng
+                              </span>
                             </div>
-                            <div className="text-[11px] text-slate-500 mb-1.5">
-                              Kích thước: {unit.dim}
+                            <div className="text-[11px] text-slate-600 font-medium bg-slate-100/80 px-2 py-0.5 rounded-md inline-block mb-2 font-mono">
+                              {unit.dim}
                             </div>
-                            <p className="text-[11px] text-slate-600 leading-snug mb-3">
+                            <p className="text-[11px] text-slate-500 leading-snug mb-3.5">
                               {unit.fit}
                             </p>
                           </div>
                           <button
                             onClick={() => handleSelectUnit(unit)}
                             disabled={isStreaming}
-                            className="w-full py-1.5 px-2 bg-white hover:bg-[#0275BC] text-slate-700 hover:text-white text-xs font-semibold rounded border border-slate-300 hover:border-[#0275BC] transition"
+                            className="w-full py-2 bg-slate-900 hover:bg-[#0275BC] text-white text-xs font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98]"
                           >
                             Chọn kích thước này
                           </button>
@@ -418,21 +427,21 @@ export default function Home() {
 
                   {/* Service Cards */}
                   {msg.cards?.type === "service_cards" && msg.cards.services && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                       {msg.cards.services.map((svc) => (
                         <div
                           key={svc.id}
-                          className="p-3 rounded-xl bg-white border border-slate-200"
+                          className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:border-blue-300 transition-all"
                         >
-                          <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center justify-between mb-1.5">
                             <span className="text-xs font-bold text-slate-900">
                               {svc.name}
                             </span>
-                            <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200 font-medium">
+                            <span className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-semibold">
                               {svc.tag}
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-600 mb-2">
+                          <p className="text-[11px] text-slate-600 mb-2 leading-relaxed">
                             {svc.desc}
                           </p>
                           <div className="text-xs font-bold text-[#0275BC]">
@@ -443,31 +452,38 @@ export default function Home() {
                     </div>
                   )}
 
-                  {/* In-Chat Booking Widget */}
+                  {/* Interactive Booking Widget (Finding 3 Fix) */}
                   {msg.cards?.type === "booking_slot_filling" && (
-                    <div className="bg-white border-2 border-[#0275BC] rounded-xl p-4 shadow-sm">
-                      <div className="flex items-center justify-between pb-2.5 border-b border-slate-200 mb-3">
-                        <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                          Phiếu xác nhận thông tin Giữ kho
-                        </h4>
-                        <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
-                          Sẵn sàng đặt
+                    <div className="bg-white border border-blue-200 rounded-2xl p-5 shadow-md">
+                      <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3.5">
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                            Phiếu xác nhận thông tin giữ kho
+                          </h4>
+                          <span className="text-[11px] text-slate-400">
+                            Tự động hoàn thiện hồ sơ đặt chỗ trực tiếp trong chat
+                          </span>
+                        </div>
+                        <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2.5 py-0.5 rounded-full">
+                          Sẵn sàng xác nhận
                         </span>
                       </div>
 
                       {!bookingConfirmed ? (
-                        <div className="space-y-3 text-xs">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                        <div className="space-y-4 text-xs">
+                          {/* Auto-filled client info */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50/80 p-3 rounded-xl border border-slate-100">
                             <div>
-                              <span className="text-slate-500">Khách hàng: </span>
-                              <strong className="text-slate-900">Anh An</strong>
+                              <span className="text-slate-400 text-[11px]">Khách hàng: </span>
+                              <strong className="text-slate-900 block text-xs mt-0.5">Anh An</strong>
                             </div>
                             <div>
-                              <span className="text-slate-500">Số điện thoại: </span>
-                              <strong className="text-slate-900">0936203020</strong>
+                              <span className="text-slate-400 text-[11px]">Số điện thoại: </span>
+                              <strong className="text-slate-900 block text-xs mt-0.5">0936203020</strong>
                             </div>
                           </div>
 
+                          {/* Inputs */}
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                               <label className="block text-[11px] text-slate-600 font-semibold mb-1">
@@ -477,7 +493,7 @@ export default function Home() {
                                 type="date"
                                 value={moveInDate}
                                 onChange={(e) => setMoveInDate(e.target.value)}
-                                className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-800 focus:outline-none focus:border-[#0275BC]"
+                                className="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-xs focus:outline-none focus:border-[#0275BC] focus:bg-white transition-all"
                               />
                             </div>
 
@@ -488,7 +504,7 @@ export default function Home() {
                               <select
                                 value={rentalMonths}
                                 onChange={(e) => setRentalMonths(Number(e.target.value))}
-                                className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-800 focus:outline-none focus:border-[#0275BC]"
+                                className="w-full bg-slate-50/60 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 text-xs focus:outline-none focus:border-[#0275BC] focus:bg-white transition-all"
                               >
                                 <option value={1}>1 tháng (950.000đ)</option>
                                 <option value={3}>3 tháng (Giảm 5%)</option>
@@ -498,9 +514,10 @@ export default function Home() {
                             </div>
                           </div>
 
-                          <div className="flex items-center justify-between pt-2 border-t border-slate-200">
-                            <span className="text-slate-600 font-medium">Tạm tính:</span>
-                            <span className="text-sm font-bold text-[#0275BC]">
+                          {/* Calculated Total */}
+                          <div className="flex items-center justify-between pt-2.5 border-t border-slate-100">
+                            <span className="text-slate-500 font-medium">Tổng chi phí tạm tính:</span>
+                            <span className="text-base font-extrabold text-[#0275BC]">
                               {(
                                 950000 *
                                 rentalMonths *
@@ -518,24 +535,24 @@ export default function Home() {
 
                           <button
                             onClick={handleConfirmBooking}
-                            className="w-full py-2 bg-[#0275BC] hover:bg-[#015386] text-white font-bold rounded-lg transition"
+                            className="w-full py-2.5 bg-[#0275BC] hover:bg-[#015386] text-white font-bold rounded-xl shadow-md transition-all active:scale-[0.99]"
                           >
                             Xác nhận & Giữ kho trực tiếp
                           </button>
                         </div>
                       ) : (
-                        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-center space-y-1.5">
+                        <div className="p-4 bg-emerald-50/80 border border-emerald-200 rounded-xl text-center space-y-1.5">
                           <div className="text-emerald-800 font-bold text-sm">
                             Đã tạo Booking thành công!
                           </div>
                           <p className="text-xs text-slate-700">
-                            Mã giữ chỗ:{" "}
-                            <strong className="font-mono bg-white px-2 py-0.5 rounded border border-emerald-300 text-emerald-900">
+                            Mã giữ chỗ độc quyền:{" "}
+                            <strong className="font-mono bg-white px-2.5 py-0.5 rounded-md border border-emerald-300 text-emerald-900">
                               {bookingRef}
                             </strong>
                           </p>
-                          <p className="text-[11px] text-slate-600">
-                            Nhân viên MyStorage tại chi nhánh 375 Võ Nguyên Giáp sẽ liên hệ theo SĐT 0936203020 trước ngày dọn vào.
+                          <p className="text-[11px] text-slate-500 mt-1">
+                            Hệ thống đã ghi nhận lịch hẹn dọn đồ vào ngày {moveInDate} tại chi nhánh 375 Võ Nguyên Giáp. Nhân viên MyStorage sẽ liên hệ qua 0936203020 để đón anh An.
                           </p>
                         </div>
                       )}
@@ -548,8 +565,8 @@ export default function Home() {
           </div>
 
           {/* Quick Suggestion Chips */}
-          <div className="px-4 py-2 border-t border-slate-200 bg-slate-50 flex flex-wrap items-center gap-2">
-            <span className="text-xs text-slate-500 font-medium">Gợi ý:</span>
+          <div className="px-5 py-2.5 border-t border-slate-100 bg-slate-50/50 flex flex-wrap items-center gap-2">
+            <span className="text-xs text-slate-400 font-medium mr-1">Gợi ý:</span>
             {[
               "Báo giá lưu trữ giúp em",
               "Giới thiệu về MyStorage",
@@ -560,7 +577,7 @@ export default function Home() {
                 key={idx}
                 onClick={() => sendQuery(chip)}
                 disabled={isStreaming}
-                className="text-xs bg-white hover:bg-slate-100 text-slate-700 px-3 py-1 rounded-full border border-slate-300 transition disabled:opacity-50"
+                className="text-xs bg-white hover:bg-slate-100 text-slate-700 hover:text-[#0275BC] px-3.5 py-1.5 rounded-full border border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all disabled:opacity-50"
               >
                 {chip}
               </button>
@@ -568,7 +585,7 @@ export default function Home() {
           </div>
 
           {/* Input Bar */}
-          <div className="p-3 bg-white border-t border-slate-200">
+          <div className="p-3.5 bg-white border-t border-slate-200/70">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -578,16 +595,16 @@ export default function Home() {
             >
               <input
                 type="text"
-                placeholder="Nhập câu hỏi về giá kho, kích thước hoặc đặt lịch..."
+                placeholder="Nhập câu hỏi về bảng giá, kích thước hoặc đặt lịch..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 disabled={isStreaming}
-                className="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0275BC] focus:bg-white transition"
+                className="flex-1 bg-slate-50/70 border border-slate-200/80 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0275BC] focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition-all"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isStreaming}
-                className="px-5 py-2 rounded-lg bg-[#0275BC] hover:bg-[#015386] text-white font-semibold text-sm disabled:opacity-40 transition"
+                className="px-5 py-2.5 rounded-xl bg-[#0275BC] hover:bg-[#015386] text-white font-semibold text-xs disabled:opacity-40 transition-all shadow-sm active:scale-[0.97]"
               >
                 Gửi
               </button>
